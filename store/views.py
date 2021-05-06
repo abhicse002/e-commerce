@@ -7,8 +7,8 @@ from .models import Category, Product
 
 
 
-def all_products(request):
-    products = Product.objects.all()
+def products_all(request):
+    products = Product.products.all()
     #{'products':products}(context)-A dictionary of values to add to the template context
     #render(request, template_name, context=None, content_type=None, status=None, using=None)
     #request - object used to generate this response
@@ -17,7 +17,7 @@ def all_products(request):
 
 def product_detail(request,slug):
     book = get_object_or_404(Product, slug=slug, in_stock = True)
-    return render(request, 'store/products/details.html', {'products':book})
+    return render(request, 'store/products/single.html', {'products':book})
 
 def category_detail(request,category_slug):
     category = get_object_or_404(Category, slug=category_slug)

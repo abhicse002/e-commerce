@@ -18,6 +18,16 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('store:category_detail', args=[self.slug])
 
+#models is an interface that interacts with our database
+#By default, Django adds a Manager with the name objects to every Django model class.
+#However, if you want to use objects as a field name, or if you want to use a name other than objects for the Manager, you can rename it on a per-model basis.
+#we create this manager class of a Model inorder to make view as thin as possible and Model as fat as possible
+class ProductManager(models.Manager):
+#Modifying a manager’s initial QuerySet¶
+#You can override a Manager’s base QuerySet
+    def get_queryset(self):
+        return super(ProductManager,self).get_queryset().filter(is_active=True)
+
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
@@ -31,6 +41,8 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+    products = ProductManager()
 
     class Meta:
         verbose_name_plural = 'Products'
